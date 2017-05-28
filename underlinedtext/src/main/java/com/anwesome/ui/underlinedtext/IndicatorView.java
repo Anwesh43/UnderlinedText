@@ -24,4 +24,7 @@ public class IndicatorView extends View{
     public void update(float value) {
         setX(value);
     }
+    public void initX(float x) {
+        setX(x);
+    }
 }
