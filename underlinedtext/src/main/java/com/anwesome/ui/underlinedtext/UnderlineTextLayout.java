@@ -38,16 +38,16 @@ public class UnderlineTextLayout extends ViewGroup{
         }
     }
     public void onMeasure(int wspec,int hspec) {
-        int viewW = w/20,viewH = 0;
+        int viewW = w/40,viewH = w/40;
         for(int i=0;i<getChildCount();i++) {
             View child = getChildAt(i);
+            measureChild(child, wspec, hspec);
             if(child instanceof UnderlinedTextView) {
-                measureChild(child, wspec, hspec);
-                viewW += (child.getMeasuredWidth() + w / 20);
+                viewW += (child.getMeasuredWidth() + w / 40);
                 viewH = Math.max(viewH, child.getMeasuredHeight());
             }
         }
-        setMeasuredDimension(viewW,w/20+viewH*2);
+        setMeasuredDimension(viewW,w/40+viewH*2);
     }
     public void addIndicator() {
         indicator = new IndicatorView(getContext());
@@ -55,7 +55,7 @@ public class UnderlineTextLayout extends ViewGroup{
             UnderlinedTextView firstTextView = (UnderlinedTextView) getChildAt(0);
             indicator.initX(firstTextView.getX()+firstTextView.getMeasuredWidth()/2-w/30);
         }
-        addView(indicator,new LayoutParams(w/15,h/60));
+        addView(indicator,new LayoutParams(w/15,h/80));
         requestLayout();
     }
     public void addText(String text) {
@@ -63,13 +63,13 @@ public class UnderlineTextLayout extends ViewGroup{
         addView(underlinedTextView,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         requestLayout();
     }
-    public void onLayout(boolean reloaded,int a,int b,int w,int h) {
-        int x = w/20,y = w/20;
+    public void onLayout(boolean reloaded,int a,int b,int wa,int ha) {
+        int x = w/40,y = w/40;
         for(int i=0;i<getChildCount();i++) {
             View child = getChildAt(i);
             if(child instanceof UnderlinedTextView) {
                 child.layout(x, y, x + child.getMeasuredWidth(), y + child.getMeasuredHeight());
-                x += (child.getMeasuredWidth() + w / 20);
+                x += (child.getMeasuredWidth() + w / 40);
             }
             else if(child instanceof IndicatorView){
                 child.layout((int)child.getX(),y+h/15,(int)child.getX()+child.getMeasuredWidth(),y+h/15+child.getMeasuredHeight());
@@ -79,7 +79,7 @@ public class UnderlineTextLayout extends ViewGroup{
     private class UnderlinedTextView extends AppCompatTextView {
         public UnderlinedTextView(Context context,String text) {
             super(context);
-            setTextSize(h/20);
+            setTextSize(h/50);
             setText(text);
             setTextColor(Color.BLACK);
         }
