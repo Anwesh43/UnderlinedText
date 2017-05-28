@@ -1,11 +1,15 @@
 package com.anwesome.ui.underlinedtext;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.display.DisplayManager;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * Created by anweshmishra on 29/05/17.
@@ -47,7 +51,7 @@ public class UnderlineTextLayout extends ViewGroup{
         requestLayout();
     }
     public void addText(String text) {
-       
+
     }
     public void onLayout(boolean reloaded,int a,int b,int w,int h) {
         int x = w/20,y = w/20;
@@ -57,5 +61,18 @@ public class UnderlineTextLayout extends ViewGroup{
             x += (child.getMeasuredWidth()+w/20);
         }
     }
-
+    private class UnderlinedTextView extends AppCompatTextView {
+        public UnderlinedTextView(Context context,String text) {
+            super(context);
+            setTextSize(h/20);
+            setText(text);
+            setTextColor(Color.BLACK);
+        }
+        public boolean onTouchEvent(MotionEvent event) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                
+            }
+            return true;
+        }
+    }
 }
