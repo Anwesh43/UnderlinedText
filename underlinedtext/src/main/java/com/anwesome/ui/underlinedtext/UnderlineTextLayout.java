@@ -1,5 +1,8 @@
 package com.anwesome.ui.underlinedtext;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -18,10 +21,11 @@ import android.widget.TextView;
 public class UnderlineTextLayout extends ViewGroup{
     private int w,h;
     private IndicatorView indicator;
+    private AnimationHandler animationHandler;
     public UnderlineTextLayout(Context context) {
         super(context);
         initDimension(context);
-
+        animationHandler = new AnimationHandler();
     }
     public void initDimension(Context context) {
         DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
@@ -70,9 +74,32 @@ public class UnderlineTextLayout extends ViewGroup{
         }
         public boolean onTouchEvent(MotionEvent event) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                
+                animationHandler.startAnimation(indicator.getX(),getX()+getMeasuredWidth()/2-indicator.getMeasuredWidth()/2);
             }
             return true;
         }
+    }
+    private class AnimationHandler extends AnimatorListenerAdapter implements ValueAnimator.AnimatorUpdateListener {
+        private ValueAnimator valueAnimator;
+        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            if(indicator != null) {
+                indicator.update((float)valueAnimator.getAnimatedValue());
+            }
+        }
+        public void onAnimationEnd(Animator animator) {
+            if(valueAnimator != null) {
+                valueAnimator = null;
+            }
+        }
+        public void startAnimation(float from,float to) {
+            if(valueAnimator == null) {
+                valueAnimator = ValueAnimator.ofFloat(from, to);
+                valueAnimator.setDuration(700);
+                valueAnimator.addUpdateListener(this);
+                valueAnimator.addListener(this);
+                valueAnimator.start();
+            }
+        }
+
     }
 }
