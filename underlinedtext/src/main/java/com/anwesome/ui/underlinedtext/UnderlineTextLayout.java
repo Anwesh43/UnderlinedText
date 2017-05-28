@@ -51,7 +51,7 @@ public class UnderlineTextLayout extends ViewGroup{
     }
     public void addIndicator() {
         indicator = new IndicatorView(getContext());
-        addView(indicator,new LayoutParams(w/15,h/80));
+        addView(indicator,new LayoutParams(Math.min(w,h)/8,h/80));
         requestLayout();
     }
     public void addText(String text) {
