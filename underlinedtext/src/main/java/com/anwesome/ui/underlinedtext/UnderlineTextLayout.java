@@ -51,10 +51,6 @@ public class UnderlineTextLayout extends ViewGroup{
     }
     public void addIndicator() {
         indicator = new IndicatorView(getContext());
-        if(getChildCount() > 0) {
-            UnderlinedTextView firstTextView = (UnderlinedTextView) getChildAt(0);
-            indicator.initX(firstTextView.getX()+firstTextView.getMeasuredWidth()/2-w/30);
-        }
         addView(indicator,new LayoutParams(w/15,h/80));
         requestLayout();
     }
@@ -65,15 +61,22 @@ public class UnderlineTextLayout extends ViewGroup{
     }
     public void onLayout(boolean reloaded,int a,int b,int wa,int ha) {
         int x = w/40,y = w/40;
+        UnderlinedTextView firstTextView = null;
         for(int i=0;i<getChildCount();i++) {
             View child = getChildAt(i);
             if(child instanceof UnderlinedTextView) {
                 child.layout(x, y, x + child.getMeasuredWidth(), y + child.getMeasuredHeight());
                 x += (child.getMeasuredWidth() + w / 40);
+                if(firstTextView == null) {
+                    firstTextView = (UnderlinedTextView)child;
+                }
             }
             else if(child instanceof IndicatorView){
                 child.layout((int)child.getX(),y+h/15,(int)child.getX()+child.getMeasuredWidth(),y+h/15+child.getMeasuredHeight());
             }
+        }
+        if(firstTextView != null) {
+            indicator.initX(firstTextView.getX()+firstTextView.getMeasuredWidth()/2-indicator.getMeasuredWidth()/2);
         }
     }
     private class UnderlinedTextView extends AppCompatTextView {
