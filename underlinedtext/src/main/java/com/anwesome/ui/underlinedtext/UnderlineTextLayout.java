@@ -22,6 +22,7 @@ public class UnderlineTextLayout extends ViewGroup{
     private int w,h;
     private IndicatorView indicator;
     private AnimationHandler animationHandler;
+    private UnderlinedTextView tappedTextView = null;
     public UnderlineTextLayout(Context context) {
         super(context);
         initDimension(context);
@@ -54,8 +55,9 @@ public class UnderlineTextLayout extends ViewGroup{
         addView(indicator,new LayoutParams(Math.min(w,h)/8,h/80));
         requestLayout();
     }
-    public void addText(String text) {
+    public void addText(String text, com.anwesome.ui.underlinedtext.OnClickListener onClickListener) {
         UnderlinedTextView underlinedTextView = new UnderlinedTextView(getContext(),text);
+        underlinedTextView.setOnClickListener(onClickListener);
         addView(underlinedTextView,new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         requestLayout();
     }
@@ -80,6 +82,10 @@ public class UnderlineTextLayout extends ViewGroup{
         }
     }
     private class UnderlinedTextView extends AppCompatTextView {
+        private com.anwesome.ui.underlinedtext.OnClickListener onClickListener;
+        public void setOnClickListener(com.anwesome.ui.underlinedtext.OnClickListener onClickListener) {
+            this.onClickListener = onClickListener;
+        }
         public UnderlinedTextView(Context context,String text) {
             super(context);
             setTextSize(h/50);
@@ -87,7 +93,8 @@ public class UnderlineTextLayout extends ViewGroup{
             setTextColor(Color.BLACK);
         }
         public boolean onTouchEvent(MotionEvent event) {
-            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN && tappedTextView == null) {
+                tappedTextView = this;
                 animationHandler.startAnimation(indicator.getX(),getX()+getMeasuredWidth()/2-indicator.getMeasuredWidth()/2);
             }
             return true;
@@ -102,6 +109,10 @@ public class UnderlineTextLayout extends ViewGroup{
         }
         public void onAnimationEnd(Animator animator) {
             if(valueAnimator != null) {
+                if(tappedTextView!=null && tappedTextView.onClickListener != null) {
+                    tappedTextView.onClickListener.onClick();
+                    tappedTextView = null;
+                }
                 valueAnimator = null;
             }
         }

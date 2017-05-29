@@ -26,9 +26,9 @@ public class UnderlinedTextList {
             isShown = true;
         }
     }
-    public void addText(String text) {
+    public void addText(String text,OnClickListener onClickListener) {
         if(!isShown) {
-            underlineTextLayout.addText(text);
+            underlineTextLayout.addText(text,onClickListener);
         }
     }
 }
